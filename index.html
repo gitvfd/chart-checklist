@@ -5,276 +5,501 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chart Pre-Publication Checklist</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    background: #f4f6fa;
-    color: #1a1a2e;
-    padding: 32px 20px;
-    min-height: 100vh;
-  }
-  .container { max-width: 680px; margin: 0 auto; }
-  header { margin-bottom: 28px; }
-  h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; color: #111827; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: #6b7280; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f4f6fa; --surface: #ffffff; --border: #e5e7eb;
+  --text-primary: #111827; --text-secondary: #6b7280; --text-muted: #9ca3af;
+  --accent: #3b82f6; --accent-light: #eff6ff;
+  --success: #059669; --success-light: #ecfdf5;
+  --radius: 12px;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; padding: 32px 16px 48px; }
+.container { max-width: 660px; margin: 0 auto; }
 
-  .progress-wrap { margin-bottom: 28px; }
-  .progress-bar-bg {
-    background: #e5e7eb; border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: 6px;
-  }
-  .progress-bar {
-    height: 100%; border-radius: 99px;
-    background: linear-gradient(90deg, #3b82f6, #6366f1);
-    transition: width 0.3s ease; width: 0%;
-  }
-  .progress-label { font-size: 12px; color: #6b7280; text-align: right; }
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
 
-  .done-banner {
-    display: none;
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    border: 1.5px solid #6ee7b7;
-    border-radius: 12px;
-    padding: 14px 20px;
-    text-align: center;
-    font-size: 15px;
-    font-weight: 700;
-    color: #065f46;
-    margin-bottom: 20px;
-  }
-  .done-banner.visible { display: block; }
+/* ── STEP INDICATOR ── */
+.step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+.step { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.step.done { color: var(--success); }
+.step.active { color: var(--accent); }
+.step-dot { width: 22px; height: 22px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; background: var(--border); color: var(--text-muted); }
+.step.done .step-dot { background: var(--success); color: white; }
+.step.active .step-dot { background: var(--accent); color: white; }
+.step-line { flex: 1; height: 2px; background: var(--border); border-radius: 99px; }
+.step-line.done { background: var(--success); }
 
-  .section {
-    background: white;
-    border-radius: 14px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-  }
-  .section-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 18px; cursor: pointer; user-select: none;
-    border-bottom: 1px solid transparent;
-    transition: background 0.12s;
-  }
-  .section-header:hover { background: #f9fafb; }
-  .section-header.open { border-bottom-color: #f0f0f0; }
-  .section-icon {
-    width: 34px; height: 34px; border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px; flex-shrink: 0;
-  }
-  .section-title { font-size: 14px; font-weight: 700; flex: 1; color: #111827; }
-  .section-count { font-size: 11px; color: #9ca3af; font-weight: 600; }
-  .chevron { font-size: 10px; color: #9ca3af; margin-left: 6px; transition: transform 0.2s; display: inline-block; }
-  .chevron.open { transform: rotate(90deg); }
+/* ── SCREEN HEADER ── */
+.screen-heading { font-size: 15px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.2px; }
+.screen-sub { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; }
 
-  .items { display: none; padding: 8px 0; }
-  .items.open { display: block; }
+/* ── SELECTION CARDS ── */
+.cards { display: flex; flex-direction: column; gap: 10px; }
+.card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 16px 18px; cursor: pointer; transition: all 0.18s; display: flex; align-items: flex-start; gap: 14px; }
+.card:hover { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(59,130,246,0.08); transform: translateY(-1px); }
+.card.selected { border-color: var(--accent); background: var(--accent-light); }
+.card-emoji { font-size: 26px; flex-shrink: 0; margin-top: 1px; }
+.card-body { flex: 1; }
+.card-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.45; }
+.card-badge { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; align-self: flex-start; margin-top: 2px; }
+.badge-full     { background: #fef3c7; color: #92400e; }
+.badge-focused  { background: #dcfce7; color: #166534; }
+.badge-quick    { background: #ede9fe; color: #5b21b6; }
+.badge-social   { background: #fce7f3; color: #9d174d; }
+.badge-web      { background: #e0f2fe; color: #0369a1; }
 
-  .item {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 9px 18px; cursor: pointer;
-    border-radius: 8px; margin: 1px 8px;
-    transition: background 0.1s;
-  }
-  .item:hover { background: #f9fafb; }
+.back-btn { background: none; border: none; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; padding: 0; margin-bottom: 18px; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
+.back-btn:hover { color: var(--accent); }
 
-  .checkmark {
-    width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
-    border: 2px solid #d1d5db; border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-    font-size: 12px; font-weight: 800; color: white;
-  }
-  .item.checked .checkmark { background: #3b82f6; border-color: #3b82f6; }
-  .item.checked .checkmark::after { content: '✓'; }
+/* ── CHECKLIST HEADER ── */
+.top-bar { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
+.top-bar h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.2; }
+.top-bar .subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.context-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.ctx-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; border-radius: 99px; padding: 4px 10px; }
+.ctx-pill-role { background: var(--accent-light); color: var(--accent); }
+.ctx-pill-channel { background: #fce7f3; color: #9d174d; }
+.ctx-pill-channel.web { background: #e0f2fe; color: #0369a1; }
+.ctx-pill-channel.newsletter { background: #dcfce7; color: #166534; }
+.restart-btn { flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.restart-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  .item-text { font-size: 13px; line-height: 1.45; color: #374151; flex: 1; }
-  .item.checked .item-text { color: #9ca3af; text-decoration: line-through; text-decoration-color: #d1d5db; }
-  .item-note { font-size: 11px; color: #9ca3af; display: block; margin-top: 3px; font-style: italic; }
-  .item.checked .item-note { color: #c4c4c4; }
+/* ── PROGRESS ── */
+.progress-wrap { margin-bottom: 20px; }
+.progress-bg { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 5px; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #3b82f6, #6366f1); transition: width 0.3s ease; width: 0%; }
+.progress-label { font-size: 11.5px; color: var(--text-muted); text-align: right; }
+.done-banner { display: none; background: var(--success-light); border: 1.5px solid #6ee7b7; border-radius: var(--radius); padding: 13px 18px; text-align: center; font-size: 14px; font-weight: 700; color: var(--success); margin-bottom: 16px; }
+.done-banner.visible { display: block; }
 
-  .reset-btn {
-    display: block; width: 100%; margin-top: 8px;
-    padding: 12px; background: white; border: 1.5px solid #e5e7eb;
-    border-radius: 12px; font-size: 13px; font-weight: 600;
-    color: #6b7280; cursor: pointer; text-align: center;
-    transition: all 0.15s;
-  }
-  .reset-btn:hover { background: #fef2f2; color: #ef4444; border-color: #fca5a5; }
+/* ── SECTIONS ── */
+.section { background: var(--surface); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.section-header { display: flex; align-items: center; gap: 11px; padding: 13px 16px; cursor: pointer; user-select: none; border-bottom: 1px solid transparent; transition: background 0.12s; }
+.section-header:hover { background: #f9fafb; }
+.section-header.open { border-bottom-color: #f0f0f0; }
+.section-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.section-title { font-size: 13px; font-weight: 700; flex: 1; }
+.section-count { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.chev { font-size: 10px; color: var(--text-muted); margin-left: 5px; transition: transform 0.2s; display: inline-block; }
+.chev.open { transform: rotate(90deg); }
+.items { display: none; padding: 6px 0; }
+.items.open { display: block; }
+
+/* ── ITEMS ── */
+.item { display: flex; align-items: flex-start; gap: 11px; padding: 9px 16px; cursor: pointer; border-radius: 8px; margin: 1px 6px; transition: background 0.1s; }
+.item:hover { background: #f9fafb; }
+.item.checked .item-text { color: var(--text-muted); text-decoration: line-through; text-decoration-color: #d1d5db; }
+.item.checked .item-note { color: #c4c4c4; }
+.checkmark { width: 19px; height: 19px; flex-shrink: 0; margin-top: 1px; border: 2px solid var(--border); border-radius: 5px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 11px; font-weight: 900; color: white; }
+.item.checked .checkmark { background: var(--accent); border-color: var(--accent); }
+.item.checked .checkmark::after { content: '✓'; }
+.item-text { font-size: 13px; line-height: 1.45; color: #374151; flex: 1; }
+.item-note { font-size: 11px; color: var(--text-muted); display: block; margin-top: 3px; font-style: italic; }
+
+/* ── LOCKED (tool-handled) ── */
+.item-tool { display: flex; align-items: flex-start; gap: 11px; padding: 8px 16px; border-radius: 8px; margin: 1px 6px; opacity: 0.42; }
+.tool-icon { width: 19px; height: 19px; flex-shrink: 0; margin-top: 1px; background: #f3f4f6; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+.tool-text { font-size: 12.5px; color: var(--text-muted); flex: 1; line-height: 1.4; }
+.tool-badge { font-size: 10px; font-weight: 700; background: #f3f4f6; color: #9ca3af; border-radius: 4px; padding: 2px 6px; flex-shrink: 0; align-self: flex-start; margin-top: 2px; }
+
+.reset-btn { display: block; width: 100%; margin-top: 8px; padding: 11px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 0.15s; }
+.reset-btn:hover { background: #fef2f2; color: #ef4444; border-color: #fca5a5; }
 </style>
 </head>
 <body>
 <div class="container">
-  <header>
-    <h1>📊 Chart Pre-Publication Checklist</h1>
-    <p class="subtitle">Complete all items before sharing on social media or in newsletters</p>
-  </header>
 
+<!-- ══ STEP 1: ROLE ══ -->
+<div id="s1" class="screen active">
+  <div class="step-indicator">
+    <div class="step active"><div class="step-dot">1</div> Role</div>
+    <div class="step-line"></div>
+    <div class="step"><div class="step-dot">2</div> Channel</div>
+    <div class="step-line"></div>
+    <div class="step"><div class="step-dot">3</div> Checklist</div>
+  </div>
+  <p class="screen-heading">Who are you producing this chart as?</p>
+  <p class="screen-sub">Pick your role to calibrate the level of detail you need to verify.</p>
+  <div class="cards">
+    <div class="card" onclick="setRole('designer')">
+      <div class="card-emoji">🎨</div>
+      <div class="card-body">
+        <div class="card-title">Designer — building from scratch</div>
+        <div class="card-desc">Working in Figma or a custom environment. Every design decision — layout, typography, color, spacing — is in your hands.</div>
+      </div>
+      <div class="card-badge badge-full">Full checklist</div>
+    </div>
+    <div class="card" onclick="setRole('tool')">
+      <div class="card-emoji">⚙️</div>
+      <div class="card-body">
+        <div class="card-title">Chart producer — using Chartbuilder or Flourish</div>
+        <div class="card-desc">The design system is enforced by the tool. Focus on data accuracy, messaging, and correct output.</div>
+      </div>
+      <div class="card-badge badge-focused">Focused checklist</div>
+    </div>
+    <div class="card" onclick="setRole('social')">
+      <div class="card-emoji">📱</div>
+      <div class="card-body">
+        <div class="card-title">Social media / newsletter — publishing a finalised chart</div>
+        <div class="card-desc">The chart was produced by someone else. Verify the essentials before it goes live.</div>
+      </div>
+      <div class="card-badge badge-quick">Quick check</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STEP 2: CHANNEL ══ -->
+<div id="s2" class="screen">
+  <div class="step-indicator">
+    <div class="step done"><div class="step-dot">✓</div> Role</div>
+    <div class="step-line done"></div>
+    <div class="step active"><div class="step-dot">2</div> Channel</div>
+    <div class="step-line"></div>
+    <div class="step"><div class="step-dot">3</div> Checklist</div>
+  </div>
+  <button class="back-btn" onclick="goTo('s1')">← Back</button>
+  <p class="screen-heading">Where will this chart be published?</p>
+  <p class="screen-sub">This determines whether a logo or banner is required on the chart itself.</p>
+  <div class="cards">
+    <div class="card" onclick="setChannel('social')">
+      <div class="card-emoji">📲</div>
+      <div class="card-body">
+        <div class="card-title">Social media</div>
+        <div class="card-desc">LinkedIn, X/Twitter, Instagram, or similar. The chart appears standalone — logo and banner are required.</div>
+      </div>
+      <div class="card-badge badge-social">Logo required</div>
+    </div>
+    <div class="card" onclick="setChannel('web')">
+      <div class="card-emoji">🌐</div>
+      <div class="card-body">
+        <div class="card-title">Web page</div>
+        <div class="card-desc">Embedded on oecd.org or a topic page. Branding is provided by the surrounding page — no logo on the chart itself.</div>
+      </div>
+      <div class="card-badge badge-web">No logo on chart</div>
+    </div>
+    <div class="card" onclick="setChannel('newsletter')">
+      <div class="card-emoji">✉️</div>
+      <div class="card-body">
+        <div class="card-title">Newsletter or email</div>
+        <div class="card-desc">Embedded in a branded email template. The template carries the identity — no logo required on the chart.</div>
+      </div>
+      <div class="card-badge" style="background:#f3f4f6;color:#6b7280;">No logo on chart</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STEP 3: CHECKLIST ══ -->
+<div id="s3" class="screen">
+  <div class="step-indicator">
+    <div class="step done"><div class="step-dot">✓</div> Role</div>
+    <div class="step-line done"></div>
+    <div class="step done"><div class="step-dot">✓</div> Channel</div>
+    <div class="step-line done"></div>
+    <div class="step active"><div class="step-dot">3</div> Checklist</div>
+  </div>
+  <div class="top-bar">
+    <div>
+      <h1>📊 Pre-Publication Checklist</h1>
+    </div>
+    <button class="restart-btn" onclick="goTo('s1'); resetAll()">↩ Start over</button>
+  </div>
+  <div class="context-pills">
+    <span class="ctx-pill ctx-pill-role" id="pillRole"></span>
+    <span class="ctx-pill ctx-pill-channel" id="pillChannel"></span>
+  </div>
   <div class="progress-wrap">
-    <div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
     <div class="progress-label" id="progressLabel">0 / 0 items checked</div>
   </div>
-
   <div class="done-banner" id="doneBanner">🎉 All checks passed — ready to publish!</div>
-
-  <div id="sections"></div>
+  <div id="sectionsContainer"></div>
   <button class="reset-btn" onclick="resetAll()">↺ Reset checklist</button>
 </div>
 
+</div><!-- /container -->
 <script>
-const data = [
+// ─────────────────────────────────────────
+// DATA
+// Each item has:
+//   roles:    which roles see it as an active checkbox
+//   channels: which channels show it (default = all channels)
+//   locked:   string shown as greyed "handled by tool" row for role='tool'
+// ─────────────────────────────────────────
+const ALL_CHANNELS = ['social','web','newsletter'];
+
+const sections = [
   {
-    icon: "🎨", color: "#ede9fe", label: "Branding & Identity",
-    items: [
-      { text: "Official logo/banner is present and correctly positioned", note: "Refer to brand guidelines for the required placement zone" },
-      { text: "Logo is not stretched, cropped, or resized below the minimum allowed size" },
-      { text: "Only brand-approved colors are used — no off-palette shades", note: "Cross-check hex/rgb values against the design system" },
-      { text: "No unauthorized fonts or font weights appear in the chart" }/*,
-      { text: "Brand URL or tagline is included if required by communication guidelines" },µ*/
+    icon:"🎨", color:"#ede9fe", label:"Branding & Identity",
+    items:[
+      { text:"Logo/banner is present and correctly positioned",
+        note:"Check placement zone against communication guidelines",
+        roles:["designer","tool","social"], channels:["social"] },
+      { text:"Logo is not stretched, cropped, or resized below the minimum allowed size",
+        roles:["designer","tool","social"], channels:["social"] },
+      { text:"Brand colors are used exclusively — no off-palette shades",
+        note:"Cross-check hex values against the design system",
+        roles:["designer"], channels:ALL_CHANNELS,
+        locked:"Brand palette is enforced by the tool" },
+      { text:"No unauthorized fonts or font weights are used",
+        roles:["designer"], channels:ALL_CHANNELS,
+        locked:"Typography is locked in the tool template" },
+      { text:"Brand URL or mandatory credit line is included",
+        note:"Only if required by your communication guidelines",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
     ]
   },
   {
-    icon: "🖋️", color: "#fef3c7", label: "Typography",
-    items: [
-      { text: "Title uses the correct typeface, weight, and size per OECD spec" },
-      { text: "Subtitle or deck text is properly styled and distinct from body text" },
-      { text: "Axis labels, legend text, and data labels use the approved font and minimum size" },
-      { text: "No text falls below the minimum legible size at the final export dimensions", note: "Typically ≥ 10pt equivalent" },
-      { text: "Capitalization style is consistent across all text elements", note: "e.g. sentence case throughout" },
-      { text: "No orphan words or awkward line breaks in titles or callout annotations" },
+    icon:"🖋️", color:"#fef3c7", label:"Typography",
+    items:[
+      { text:"Title uses the correct typeface, weight, and size",
+        roles:["designer"], channels:ALL_CHANNELS,
+        locked:"Title style is defined by the tool template" },
+      { text:"Subtitle or annotation text is properly styled and distinct from the title",
+        roles:["designer"], channels:ALL_CHANNELS,
+        locked:"Text hierarchy is handled by the tool" },
+      { text:"Axis labels, legend text, and data labels are legible at final export size",
+        note:"No text should fall below ~10pt equivalent at published dimensions",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Capitalization style is consistent across all text elements",
+        note:"Sentence case throughout, or title case throughout — pick one",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"No orphan words or awkward line breaks in the title or key annotations",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
     ]
   },
   {
-    icon: "📐", color: "#e0f2fe", label: "Layout, Margins & Spacing",
-    items: [
-      { text: "Canvas size matches the required format for each target channel", note: "e.g. width/height for SM, width/height for newsletter" },
-      { text: "Outer margins and padding match the spacing tokens from the design system" },
-      { text: "No visual element bleeds into the safe zone or is clipped at the canvas edge" },
-      { text: "Internal spacing between chart elements is consistent and balanced" },
-      { text: "Legend is correctly positioned and aligned to the layout grid" },
-      { text: "Footnotes is placed below the chart in the chart area" },
-      { text: "Source is placed within the footer area" },
+    icon:"📐", color:"#e0f2fe", label:"Layout, Margins & Spacing",
+    items:[
+      { text:"Canvas size matches the required format for the target channel",
+        note:"e.g. 1080×1080 for Instagram, 1200×628 for LinkedIn, 600px wide for newsletters",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Outer margins and padding match the spacing tokens from the design system",
+        roles:["designer"], channels:ALL_CHANNELS,
+        locked:"Margins and padding are set by the tool" },
+      { text:"No visual element bleeds into the safe zone or is clipped at the canvas edge",
+        roles:["designer"], channels:ALL_CHANNELS,
+        locked:"Layout boundaries are enforced by the tool" },
+      { text:"Legend is correctly positioned and does not overlap data",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Source line and footnotes are placed in the footer area and fully visible",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
     ]
   },
   {
-    icon: "📊", color: "#fce7f3", label: "Data Accuracy & Integrity",
-    items: [
-      { text: "All data values have been verified against the source dataset" },
-      { text: "The chart type is appropriate for the story and the data structure" },
-      { text: "Axes start at the correct baseline", note: "Bar charts must start at 0; deviations require explicit justification" },
-      { text: "Scale, intervals, and axis breaks are consistent and not visually misleading" },
-      { text: "Units are clearly stated on the chart (%, USD, millions, index base year, etc.)" },
-      { text: "The reference time period or year is explicitly labeled" },/*
-      { text: "Data source is cited in full with correct attribution wording" },*/
+    icon:"📊", color:"#fce7f3", label:"Data Accuracy & Integrity",
+    items:[
+      { text:"All data values have been verified against the source dataset",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"The chart type is appropriate for the data and the story being told",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Axes start at the correct baseline",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Scale and intervals are consistent and not visually misleading",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Units are clearly stated on the chart",
+        note:"%, index, USD, millions, per 1 000 inhabitants — whichever applies",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+      { text:"The reference time period or year is explicitly labeled",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+      { text:"Data source is cited in full with correct attribution wording",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
     ]
   },
   {
-    icon: "✍️", color: "#dcfce7", label: "Titles, Labels & Annotations",
-    items: [
-      { text: "The title is self-explanatory without requiring surrounding editorial text" },
-      { text: "The title communicates the key takeaway, not just the topic" },
-      { text: "All data labels are visible and free of overlaps with each other or chart elements" },
-      { text: "Annotations and callouts are accurate and clearly anchored to the correct data point" },
-      { text: "Geographic names, entity names, and acronyms are spelled and capitalized correctly" },
-      { text: "No placeholder text remains (Lorem ipsum, [TBC], TODO, etc.)" },
+    icon:"✍️", color:"#dcfce7", label:"Titles, Labels & Annotations",
+    items:[
+      { text:"The title is self-explanatory without needing surrounding editorial text",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+      { text:"The title communicates the key takeaway, not just the topic",
+        note:"\"GDP fell in 3 of 5 regions\" beats \"GDP by region\"",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+      { text:"All data labels are visible and free from overlaps with each other or chart elements",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Annotations and callouts are accurate and clearly anchored to the right data point",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Country names, entity names, and acronyms are spelled and capitalized correctly",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"No placeholder text remains",
+        note:"No Lorem ipsum, [TBC], TODO, or template defaults",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+      { text:"A plain-language caption is ready for the post",
+        note:"Describe what the chart shows for readers who cannot see images",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
     ]
   },
   {
-    icon: "♿", color: "#fff7ed", label: "Accessibility & Readability",
-    items: [
-      { text: "Text-to-background contrast meets WCAG AA standard", note: "Minimum ratio of 4.5:1 for normal text, 3:1 for large text" },
-      { text: "Information is not conveyed by color alone", note: "Use patterns, direct labels, or shapes as a second encoding channel" },
-      { text: "The chart remains legible at thumbnail size (mobile feed or email preview)" },
-      { text: "An alt text or plain-language caption is drafted for the social media post" },
-    ]
-  },
-  {
-    icon: "💾", color: "#f3f4f6", label: "Export & File Quality",
-    items: [
-      /*{ text: "File is exported at the correct resolution for the channel", note: "≥ 2× (144 dpi) for digital screens; 300 dpi for print" },*/
-      { text: "Export format is correct for the target channel", note: "PNG for all outputs" },
-      { text: "File size is optimized without visible quality loss or compression artefacts" },
-      { text: "The final file has been previewed in the actual target context", note: "e.g. feed simulator, mobile preview" },
-      { text: "File name follows the team naming convention and includes a version number" },
+    icon:"💾", color:"#f3f4f6", label:"Export & File Quality",
+    items:[
+      { text:"File is exported at the correct resolution",
+        note:"Minimum 2× (144 dpi) for digital screens; 300 dpi for print or press use",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"Export format matches the channel requirement",
+        note:"PNG for social media; PDF or SVG for newsletters and press kits",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"File size is acceptable and shows no visible compression artefacts",
+        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { text:"The final chart has been previewed in the actual posting context",
+        note:"Feed simulator, email client, or embedded page view — not just desktop at 100%",
+        roles:["designer","tool","social"], channels:ALL_CHANNELS },
     ]
   },
 ];
 
-let state = {};
-let total = 0;
-const sectionsEl = document.getElementById('sections');
+// ─────────────────────────────────────────
+// ROUTING STATE
+// ─────────────────────────────────────────
+let selRole    = null;
+let selChannel = null;
+let state      = {};
+let activeItems = [];
 
-data.forEach((section, si) => {
-  total += section.items.length;
-  const sec = document.createElement('div');
-  sec.className = 'section';
+const roleLabels = {
+  designer: "🎨 Designer — from scratch",
+  tool:     "⚙️ Chartbuilder / Flourish",
+  social:   "📱 Social media / newsletter",
+};
+const channelLabels = {
+  social:     { text:"📲 Social media",   cls:"" },
+  web:        { text:"🌐 Web page",        cls:"web" },
+  newsletter: { text:"✉️ Newsletter",      cls:"newsletter" },
+};
 
-  const header = document.createElement('div');
-  header.className = 'section-header' + (si === 0 ? ' open' : '');
-  header.innerHTML = `
-    <div class="section-icon" style="background:${section.color}">${section.icon}</div>
-    <div class="section-title">${section.label}</div>
-    <span class="section-count" id="cnt-${si}">0/${section.items.length}</span>
-    <span class="chevron${si === 0 ? ' open' : ''}" id="chev-${si}">▶</span>
-  `;
-
-  const itemsDiv = document.createElement('div');
-  itemsDiv.className = 'items' + (si === 0 ? ' open' : '');
-  itemsDiv.id = `items-${si}`;
-
-  section.items.forEach((item, ii) => {
-    const key = `${si}-${ii}`;
-    state[key] = false;
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.id = `itm-${key}`;
-    div.innerHTML = `
-      <div class="checkmark" id="cm-${key}"></div>
-      <span class="item-text">${item.text}${item.note ? `<span class="item-note">ℹ︎ ${item.note}</span>` : ''}</span>
-    `;
-    div.onclick = () => toggle(key, si, section.items.length);
-    itemsDiv.appendChild(div);
-  });
-
-  header.onclick = () => {
-    const open = itemsDiv.classList.toggle('open');
-    header.classList.toggle('open', open);
-    document.getElementById(`chev-${si}`).classList.toggle('open', open);
-  };
-
-  sec.appendChild(header);
-  sec.appendChild(itemsDiv);
-  sectionsEl.appendChild(sec);
-});
-
-updateGlobal();
-
-function toggle(key, si, slen) {
-  state[key] = !state[key];
-  document.getElementById(`itm-${key}`).classList.toggle('checked', state[key]);
-  // section count
-  let sc = 0;
-  for (let i = 0; i < slen; i++) if (state[`${si}-${i}`]) sc++;
-  document.getElementById(`cnt-${si}`).textContent = `${sc}/${slen}`;
-  updateGlobal();
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
 }
 
-function updateGlobal() {
+function setRole(role) {
+  selRole = role;
+  goTo('s2');
+}
+
+function setChannel(channel) {
+  selChannel = channel;
+  buildAndShow();
+}
+
+function buildAndShow() {
+  state = {};
+  activeItems = [];
+  document.getElementById('pillRole').textContent    = roleLabels[selRole];
+  const ch = channelLabels[selChannel];
+  const pill = document.getElementById('pillChannel');
+  pill.textContent = ch.text;
+  pill.className   = `ctx-pill ctx-pill-channel ${ch.cls}`;
+  buildChecklist();
+  updateProgress();
+  goTo('s3');
+}
+
+// ─────────────────────────────────────────
+// BUILD
+// ─────────────────────────────────────────
+function buildChecklist() {
+  const container = document.getElementById('sectionsContainer');
+  container.innerHTML = '';
+
+  sections.forEach((section, si) => {
+    const activeInSection = section.items.filter(item =>
+      item.roles.includes(selRole) &&
+      item.channels.includes(selChannel)
+    );
+    const lockedInSection = (selRole === 'tool')
+      ? section.items.filter(item =>
+          item.locked &&
+          !item.roles.includes('tool') &&
+          item.channels.includes(selChannel))
+      : [];
+
+    if (activeInSection.length === 0 && lockedInSection.length === 0) return;
+
+    const secEl = document.createElement('div');
+    secEl.className = 'section';
+
+    const header = document.createElement('div');
+    header.className = 'section-header open';
+    header.innerHTML = `
+      <div class="section-icon" style="background:${section.color}">${section.icon}</div>
+      <div class="section-title">${section.label}</div>
+      <span class="section-count" id="cnt-${si}">0/${activeInSection.length}</span>
+      <span class="chev open" id="chev-${si}">▶</span>
+    `;
+
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'items open';
+
+    activeInSection.forEach(item => {
+      const key = `${si}__${item.text.slice(0,28).replace(/\W/g,'_')}`;
+      state[key] = false;
+      activeItems.push({ key, si, count: activeInSection.length });
+
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.id = `itm-${key}`;
+      div.innerHTML = `
+        <div class="checkmark"></div>
+        <span class="item-text">${item.text}${item.note ? `<span class="item-note">ℹ︎ ${item.note}</span>` : ''}</span>
+      `;
+      div.onclick = () => toggleItem(key, si, activeInSection.length);
+      itemsDiv.appendChild(div);
+    });
+
+    lockedInSection.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'item-tool';
+      div.innerHTML = `<div class="tool-icon">🔒</div><span class="tool-text">${item.text}</span><span class="tool-badge">Tool</span>`;
+      itemsDiv.appendChild(div);
+    });
+
+    header.onclick = () => {
+      const open = itemsDiv.classList.toggle('open');
+      header.classList.toggle('open', open);
+      document.getElementById(`chev-${si}`).classList.toggle('open', open);
+    };
+
+    secEl.appendChild(header);
+    secEl.appendChild(itemsDiv);
+    container.appendChild(secEl);
+  });
+}
+
+// ─────────────────────────────────────────
+// INTERACTION
+// ─────────────────────────────────────────
+function toggleItem(key, si) {
+  state[key] = !state[key];
+  document.getElementById(`itm-${key}`).classList.toggle('checked', state[key]);
+  const sKeys = activeItems.filter(i => i.si === si).map(i => i.key);
+  const checked = sKeys.filter(k => state[k]).length;
+  const el = document.getElementById(`cnt-${si}`);
+  if (el) el.textContent = `${checked}/${sKeys.length}`;
+  updateProgress();
+}
+
+function updateProgress() {
+  const total   = activeItems.length;
   const checked = Object.values(state).filter(Boolean).length;
   const pct = total ? Math.round((checked / total) * 100) : 0;
-  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressLabel').textContent = `${checked} / ${total} items checked`;
   document.getElementById('doneBanner').classList.toggle('visible', checked === total && total > 0);
 }
 
 function resetAll() {
-  Object.keys(state).forEach(k => { state[k] = false; });
-  document.querySelectorAll('.item').forEach(el => el.classList.remove('checked'));
-  data.forEach((s, si) => {
-    document.getElementById(`cnt-${si}`).textContent = `0/${s.items.length}`;
+  activeItems.forEach(({ key, si }) => {
+    state[key] = false;
+    const el = document.getElementById(`itm-${key}`);
+    if (el) el.classList.remove('checked');
   });
-  updateGlobal();
+  sections.forEach((_, si) => {
+    const sKeys = activeItems.filter(i => i.si === si).map(i => i.key);
+    const el = document.getElementById(`cnt-${si}`);
+    if (el) el.textContent = `0/${sKeys.length}`;
+  });
+  updateProgress();
 }
 </script>
 </body>
