@@ -109,13 +109,14 @@ body {
 .panel-link { font-size: 13px; font-weight: 650; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .panel-link:hover { text-decoration: underline; }
 .panel-collapse-btn {
-  background: none; border: none; padding: 4px; margin: -4px; border-radius: 6px; cursor: pointer;
-  color: var(--text-3); display: flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; flex-shrink: 0; padding: 0; border: none; border-radius: 999px; cursor: pointer;
+  background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center;
 }
-.panel-collapse-btn:hover { background: var(--surface-2); color: var(--text-2); }
+.panel-collapse-btn:hover { background: var(--accent-strong); }
+.panel-collapse-btn .chev { color: #fff; margin-left: 0; }
 .panel-media { background: var(--surface-2); display: flex; align-items: center; justify-content: center; padding: 16px; min-height: 90px; }
 .panel-media img { display: block; width: 100%; max-width: 500px; height: auto; border-radius: 8px; box-shadow: var(--shadow); }
-.panel-media iframe { width: 100%; max-width: 500px; height: 300px; border: 0; display: block; border-radius: 8px; background: var(--surface); }
+.panel-media iframe { width: 100%; max-width: 500px; height: 550px; border: 0; display: block; border-radius: 8px; background: var(--surface); }
 .panel-empty { font-size: 13px; color: var(--text-3); text-align: center; padding: 20px 10px; }
 .panel-card.collapsed .panel-media { display: none; }
 
@@ -312,13 +313,13 @@ body {
       <div class="compare-preview">
         <div class="panel-card" id="exampleCard">
           <div class="panel-head">
-            <span class="panel-label">Example — <span id="exampleChannelLabel"></span></span>
             <div class="panel-head-actions">
-              <a class="panel-link" id="exampleLink" href="#" target="_blank" rel="noopener">View full example <span data-icon="arrowRight" data-size="12"></span></a>
               <button class="panel-collapse-btn" id="exampleCollapseBtn" type="button" onclick="toggleExampleCollapse()" aria-expanded="true" aria-label="Collapse example">
                 <span class="chev open" id="exampleChev" data-icon="caretRight" data-size="12"></span>
               </button>
+              <span class="panel-label">Example — <span id="exampleChannelLabel"></span></span>
             </div>
+            <a class="panel-link" id="exampleLink" href="#" target="_blank" rel="noopener">View full example <span data-icon="arrowRight" data-size="12"></span></a>
           </div>
           <div class="panel-media" id="exampleMedia"></div>
         </div>
