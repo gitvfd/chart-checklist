@@ -7,500 +7,633 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #f4f6fa; --surface: #ffffff; --border: #e5e7eb;
-  --text-primary: #111827; --text-secondary: #6b7280; --text-muted: #9ca3af;
-  --accent: #3b82f6; --accent-light: #eff6ff;
-  --success: #059669; --success-light: #ecfdf5;
-  --radius: 12px;
+  --bg: #ffffff; --surface: #ffffff; --surface-2: #f2f3f5;
+  --border: #e4e6ea; --border-strong: #d6d9de;
+  --text: #14161a; --text-2: #5c6270; --text-3: #9096a3;
+  --accent: #2f5fe0; --accent-soft: #eaf0ff; --accent-strong: #1f47b8;
+  --success: #0e8f5f; --success-soft: #e7f8f0;
+  --banner-bg: #101d40;
+  --radius-lg: 14px; --radius-md: 10px; --radius-sm: 7px;
+  --shadow: 0 1px 2px rgba(20,25,35,.04), 0 2px 8px rgba(20,25,35,.05);
 }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; padding: 32px 16px 48px; }
-.container { max-width: 660px; margin: 0 auto; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101216; --surface: #191c22; --surface-2: #1f232b;
+    --border: #2b2f38; --border-strong: #3a3f4a;
+    --text: #eef0f3; --text-2: #a2a8b5; --text-3: #6d7382;
+    --accent: #6a8fff; --accent-soft: #1c2740; --accent-strong: #8aa5ff;
+    --success: #3ecf8e; --success-soft: #10281f;
+    --shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 10px rgba(0,0,0,.3);
+  }
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--text); min-height: 100vh;
+  font-size: 15px; line-height: 1.4;
+}
+.container { width: 100%; }
+
+/* ── BANNER (full-bleed) ── */
+.page-banner {
+  width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+  background: var(--banner-bg); color: #ffffff;
+}
+.page-banner-inner { max-width: 640px; margin: 0 auto; padding: 40px 18px 24px; }
+.page-content { max-width: 640px; margin: 0 auto; padding: 22px 18px 60px; }
 
 /* ── SCREENS ── */
 .screen { display: none; }
-.screen.active { display: block; }
+.screen.active { display: block; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-/* ── STEP INDICATOR ── */
-.step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
-.step { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
-.step.done { color: var(--success); }
-.step.active { color: var(--accent); }
-.step-dot { width: 22px; height: 22px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; background: var(--border); color: var(--text-muted); }
-.step.done .step-dot { background: var(--success); color: white; }
-.step.active .step-dot { background: var(--accent); color: white; }
-.step-line { flex: 1; height: 2px; background: var(--border); border-radius: 99px; }
-.step-line.done { background: var(--success); }
+/* ── INTRO ── */
+.eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.page-title { font-size: 21px; font-weight: 750; letter-spacing: -0.3px; margin-bottom: 6px; }
+.page-sub { font-size: 13.5px; color: var(--text-2); margin-bottom: 26px; line-height: 1.55; max-width: 50ch; }
 
-/* ── SCREEN HEADER ── */
-.screen-heading { font-size: 15px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.2px; }
-.screen-sub { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; }
-
-/* ── SELECTION CARDS ── */
+/* ── ROLE CARDS ── */
 .cards { display: flex; flex-direction: column; gap: 10px; }
-.card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 16px 18px; cursor: pointer; transition: all 0.18s; display: flex; align-items: flex-start; gap: 14px; }
-.card:hover { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(59,130,246,0.08); transform: translateY(-1px); }
-.card.selected { border-color: var(--accent); background: var(--accent-light); }
-.card-emoji { font-size: 26px; flex-shrink: 0; margin-top: 1px; }
-.card-body { flex: 1; }
-.card-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
-.card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.45; }
-.card-badge { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; align-self: flex-start; margin-top: 2px; }
-.badge-full     { background: #fef3c7; color: #92400e; }
-.badge-focused  { background: #dcfce7; color: #166534; }
-.badge-quick    { background: #ede9fe; color: #5b21b6; }
-.badge-social   { background: #fce7f3; color: #9d174d; }
-.badge-web      { background: #e0f2fe; color: #0369a1; }
+.card {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+  padding: 17px 18px; cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s;
+  display: flex; align-items: flex-start; gap: 14px; text-align: left; width: 100%;
+}
+.card:hover { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.card:active { transform: scale(.997); }
+.card-icon {
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; background: var(--accent-soft);
+  color: var(--accent-strong); display: flex; align-items: center; justify-content: center;
+}
+.card-body { flex: 1; min-width: 0; }
+.card-title { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.card-desc { font-size: 12.5px; color: var(--text-2); line-height: 1.5; margin-bottom: 6px; }
+.card-meta { font-size: 11.5px; color: var(--text-3); font-weight: 600; }
+.card-arrow { color: var(--text-3); flex-shrink: 0; margin-top: 10px; display: flex; }
 
-.back-btn { background: none; border: none; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; padding: 0; margin-bottom: 18px; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
+/* ── TOP BAR (checklist screen) ── */
+.back-btn {
+  background: none; border: none; font-size: 12.5px; font-weight: 600; color: var(--text-3);
+  cursor: pointer; padding: 4px 0; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 5px;
+}
 .back-btn:hover { color: var(--accent); }
-
-/* ── CHECKLIST HEADER ── */
-.top-bar { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
-.top-bar h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.2; }
-.top-bar .subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
-.context-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-.ctx-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; border-radius: 99px; padding: 4px 10px; }
-.ctx-pill-role { background: var(--accent-light); color: var(--accent); }
-.ctx-pill-channel { background: #fce7f3; color: #9d174d; }
-.ctx-pill-channel.web { background: #e0f2fe; color: #0369a1; }
-.ctx-pill-channel.newsletter { background: #dcfce7; color: #166534; }
-.restart-btn { flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.top-bar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.top-bar h1 { font-size: 19px; font-weight: 750; letter-spacing: -0.3px; line-height: 1.25; }
+.role-line { font-size: 12.5px; color: var(--text-2); margin-top: 5px; margin-bottom: 20px; }
+.role-line b { color: var(--text); font-weight: 650; }
+.restart-btn {
+  flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 7px 12px; font-size: 12px; font-weight: 600; color: var(--text-2); cursor: pointer; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
 .restart-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── CHANNEL TOGGLE ── */
+.field-label { font-size: 11.5px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
+.segmented {
+  display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px;
+  padding: 3px; margin-bottom: 22px; gap: 2px;
+}
+.segmented button {
+  border: none; background: transparent; padding: 7px 15px; border-radius: 999px; font-size: 12.5px;
+  font-weight: 650; color: var(--text-2); cursor: pointer; transition: background .15s, color .15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.segmented button.active { background: var(--surface); color: var(--accent-strong); box-shadow: var(--shadow); }
+.channel-hint { font-size: 11.5px; color: var(--text-3); margin-top: -14px; margin-bottom: 22px; }
+
+/* ── EXAMPLE ── */
+.example-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
+.example-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--border); }
+.example-label { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; }
+.example-link { font-size: 12px; font-weight: 650; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.example-link:hover { text-decoration: underline; }
+.example-media { background: var(--surface-2); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.example-media img { display: block; max-height: 320px; width: auto; max-width: 100%; border-radius: 8px; box-shadow: var(--shadow); }
+.example-media iframe { width: 100%; height: 340px; border: 0; display: block; border-radius: 8px; background: var(--surface); }
 
 /* ── PROGRESS ── */
 .progress-wrap { margin-bottom: 20px; }
-.progress-bg { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 5px; }
-.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #3b82f6, #6366f1); transition: width 0.3s ease; width: 0%; }
-.progress-label { font-size: 11.5px; color: var(--text-muted); text-align: right; }
-.done-banner { display: none; background: var(--success-light); border: 1.5px solid #6ee7b7; border-radius: var(--radius); padding: 13px 18px; text-align: center; font-size: 14px; font-weight: 700; color: var(--success); margin-bottom: 16px; }
-.done-banner.visible { display: block; }
+.progress-bg { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 6px; }
+.progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width .25s ease; width: 0%; }
+.progress-label { font-size: 11.5px; color: var(--text-3); text-align: right; font-weight: 600; }
+.done-banner {
+  display: none; background: var(--success-soft); border: 1.5px solid var(--success); border-radius: var(--radius-md);
+  padding: 12px 16px; text-align: center; font-size: 13.5px; font-weight: 700; color: var(--success); margin-bottom: 18px;
+  align-items: center; justify-content: center; gap: 8px;
+}
+.done-banner.visible { display: flex; }
 
-/* ── SECTIONS ── */
-.section { background: var(--surface); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-.section-header { display: flex; align-items: center; gap: 11px; padding: 13px 16px; cursor: pointer; user-select: none; border-bottom: 1px solid transparent; transition: background 0.12s; }
-.section-header:hover { background: #f9fafb; }
-.section-header.open { border-bottom-color: #f0f0f0; }
-.section-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+/* ── SECTIONS (accordion) ── */
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 9px; overflow: hidden; }
+.section-header { display: flex; align-items: center; gap: 11px; padding: 13px 15px; cursor: pointer; user-select: none; }
+.section-header:hover { background: var(--surface-2); }
+.section-icon {
+  width: 28px; height: 28px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-strong); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
 .section-title { font-size: 13px; font-weight: 700; flex: 1; }
-.section-count { font-size: 11px; color: var(--text-muted); font-weight: 600; }
-.chev { font-size: 10px; color: var(--text-muted); margin-left: 5px; transition: transform 0.2s; display: inline-block; }
+.section-count { font-size: 11px; color: var(--text-3); font-weight: 650; }
+.chev { color: var(--text-3); margin-left: 2px; transition: transform .18s; display: inline-flex; }
 .chev.open { transform: rotate(90deg); }
-.items { display: none; padding: 6px 0; }
+.items { display: none; padding: 2px 0 8px; border-top: 1px solid var(--border); }
 .items.open { display: block; }
 
 /* ── ITEMS ── */
-.item { display: flex; align-items: flex-start; gap: 11px; padding: 9px 16px; cursor: pointer; border-radius: 8px; margin: 1px 6px; transition: background 0.1s; }
-.item:hover { background: #f9fafb; }
-.item.checked .item-text { color: var(--text-muted); text-decoration: line-through; text-decoration-color: #d1d5db; }
-.item.checked .item-note { color: #c4c4c4; }
-.checkmark { width: 19px; height: 19px; flex-shrink: 0; margin-top: 1px; border: 2px solid var(--border); border-radius: 5px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 11px; font-weight: 900; color: white; }
+.item { display: flex; align-items: flex-start; gap: 11px; padding: 10px 15px; cursor: pointer; border-radius: 8px; margin: 1px 6px; transition: background .1s; }
+.item:hover { background: var(--surface-2); }
+.item.checked .item-text { color: var(--text-3); text-decoration: line-through; text-decoration-color: var(--border-strong); }
+.item.checked .item-note { color: var(--text-3); opacity: .6; }
+.checkmark {
+  width: 19px; height: 19px; flex-shrink: 0; margin-top: 1px; border: 1.5px solid var(--border-strong);
+  border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white;
+  transition: background .12s, border-color .12s;
+}
+.checkmark svg { opacity: 0; transition: opacity .1s; }
 .item.checked .checkmark { background: var(--accent); border-color: var(--accent); }
-.item.checked .checkmark::after { content: '✓'; }
-.item-text { font-size: 13px; line-height: 1.45; color: #374151; flex: 1; }
-.item-note { font-size: 11px; color: var(--text-muted); display: block; margin-top: 3px; font-style: italic; }
+.item.checked .checkmark svg { opacity: 1; }
+.item-text { font-size: 13.2px; line-height: 1.5; color: var(--text); flex: 1; }
+.item-note { font-size: 11.5px; color: var(--text-3); display: block; margin-top: 3px; line-height: 1.45; }
 
-/* ── LOCKED (tool-handled) ── */
-.item-tool { display: flex; align-items: flex-start; gap: 11px; padding: 8px 16px; border-radius: 8px; margin: 1px 6px; opacity: 0.42; }
-.tool-icon { width: 19px; height: 19px; flex-shrink: 0; margin-top: 1px; background: #f3f4f6; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
-.tool-text { font-size: 12.5px; color: var(--text-muted); flex: 1; line-height: 1.4; }
-.tool-badge { font-size: 10px; font-weight: 700; background: #f3f4f6; color: #9ca3af; border-radius: 4px; padding: 2px 6px; flex-shrink: 0; align-self: flex-start; margin-top: 2px; }
+/* flat list (quick-check role) */
+.flat-list { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px 0; margin-bottom: 9px; }
+.flat-list .item { margin: 1px 6px; }
+.flat-list .item + .item { border-top: 1px solid var(--border); border-radius: 0; margin-top: 0; }
+.flat-list .item:first-child { border-top-left-radius: 8px; border-top-right-radius: 8px; }
 
-.reset-btn { display: block; width: 100%; margin-top: 8px; padding: 11px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 0.15s; }
-.reset-btn:hover { background: #fef2f2; color: #ef4444; border-color: #fca5a5; }
+/* ── locked/tool-handled disclosure ── */
+.locked-wrap { border-top: 1px solid var(--border); }
+.locked-summary {
+  list-style: none; cursor: pointer; padding: 9px 15px; font-size: 11.5px; font-weight: 650;
+  color: var(--text-3); display: flex; align-items: center; gap: 6px;
+}
+.locked-summary::-webkit-details-marker { display: none; }
+.locked-summary:hover { color: var(--text-2); }
+.locked-items { padding: 0 15px 10px 34px; }
+.locked-item { font-size: 12px; color: var(--text-3); line-height: 1.6; }
+
+.reset-btn {
+  display: block; width: 100%; margin-top: 10px; padding: 11px; background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: var(--radius-md); font-size: 12.5px; font-weight: 650;
+  color: var(--text-2); cursor: pointer; text-align: center; transition: border-color .15s, color .15s;
+}
+.reset-btn:hover { border-color: #e0857a; color: #d1493a; }
+
+/* ── BANNER — text/control colors on dark background ── */
+.page-banner .eyebrow { color: #9db4ff; }
+.page-banner .page-title { color: #ffffff; }
+.page-banner .page-sub { color: rgba(255,255,255,.72); }
+.page-banner .back-btn { color: rgba(255,255,255,.6); }
+.page-banner .back-btn:hover { color: #ffffff; }
+.page-banner .top-bar h1 { color: #ffffff; }
+.page-banner .restart-btn { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.28); color: rgba(255,255,255,.85); }
+.page-banner .restart-btn:hover { border-color: #ffffff; color: #ffffff; }
+.page-banner .role-line { color: rgba(255,255,255,.68); }
+.page-banner .role-line b { color: #ffffff; }
+.page-banner .field-label { color: rgba(255,255,255,.55); }
+.page-banner .segmented { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
+.page-banner .segmented button { color: rgba(255,255,255,.72); }
+.page-banner .segmented button.active { background: #ffffff; color: var(--banner-bg); box-shadow: none; }
+.page-banner .channel-hint { color: rgba(255,255,255,.6); }
 </style>
 </head>
 <body>
 <div class="container">
 
-<!-- ══ STEP 1: ROLE ══ -->
+<!-- ══ SCREEN 1: ROLE ══ -->
 <div id="s1" class="screen active">
-  <div class="step-indicator">
-    <div class="step active"><div class="step-dot">1</div> Role</div>
-    <div class="step-line"></div>
-    <div class="step"><div class="step-dot">2</div> Channel</div>
-    <div class="step-line"></div>
-    <div class="step"><div class="step-dot">3</div> Checklist</div>
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <div class="eyebrow">Chart checklist</div>
+      <p class="page-title">Who's producing this chart?</p>
+      <p class="page-sub">Pick your role — the checklist adjusts to what you're actually responsible for checking.</p>
+    </div>
   </div>
-  <p class="screen-heading">Who are you producing this chart as?</p>
-  <p class="screen-sub">Pick your role to calibrate the level of detail you need to verify.</p>
-  <div class="cards">
-    <div class="card" onclick="setRole('designer')">
-      <div class="card-emoji">🎨</div>
-      <div class="card-body">
-        <div class="card-title">Designer — building from scratch</div>
-        <div class="card-desc">Working in Figma or a custom environment. Every design decision — layout, typography, color, spacing — is in your hands.</div>
-      </div>
-      <div class="card-badge badge-full">Full checklist</div>
-    </div>
-    <div class="card" onclick="setRole('tool')">
-      <div class="card-emoji">⚙️</div>
-      <div class="card-body">
-        <div class="card-title">Chart producer — using Chartbuilder or Flourish</div>
-        <div class="card-desc">The design system is enforced by the tool. Focus on data accuracy, messaging, and correct output.</div>
-      </div>
-      <div class="card-badge badge-focused">Focused checklist</div>
-    </div>
-    <div class="card" onclick="setRole('social')">
-      <div class="card-emoji">📱</div>
-      <div class="card-body">
-        <div class="card-title">Social media / newsletter — publishing a finalised chart</div>
-        <div class="card-desc">The chart was produced by someone else. Verify the essentials before it goes live.</div>
-      </div>
-      <div class="card-badge badge-quick">Quick check</div>
+  <div class="page-content">
+    <div class="cards">
+      <button class="card" onclick="selectRole('designer')">
+        <div class="card-icon" data-icon="paintBrush" data-size="20"></div>
+        <div class="card-body">
+          <div class="card-title">Designer, building from scratch</div>
+          <div class="card-desc">Working in Illustrator, Figma, or another free-form tool. Every design decision — layout, type, color, spacing — is yours to verify.</div>
+          <div class="card-meta">Full checklist · 6 sections</div>
+        </div>
+        <div class="card-arrow" data-icon="arrowRight" data-size="16"></div>
+      </button>
+      <button class="card" onclick="selectRole('tool')">
+        <div class="card-icon" data-icon="gearSix" data-size="20"></div>
+        <div class="card-body">
+          <div class="card-title">Chart producer, using the internal tool</div>
+          <div class="card-desc">Chartbuilder, Flourish, or similar. The design system is enforced automatically — focus on the data and the message.</div>
+          <div class="card-meta">Focused checklist · design steps handled for you</div>
+        </div>
+        <div class="card-arrow" data-icon="arrowRight" data-size="16"></div>
+      </button>
+      <button class="card" onclick="selectRole('social')">
+        <div class="card-icon" data-icon="paperPlaneTilt" data-size="20"></div>
+        <div class="card-body">
+          <div class="card-title">Publishing a finished chart</div>
+          <div class="card-desc">Social media or newsletter team, posting a chart someone else made. A short list of essentials before it goes live.</div>
+          <div class="card-meta">Quick check · under a minute</div>
+        </div>
+        <div class="card-arrow" data-icon="arrowRight" data-size="16"></div>
+      </button>
     </div>
   </div>
 </div>
 
-<!-- ══ STEP 2: CHANNEL ══ -->
+<!-- ══ SCREEN 2: CHECKLIST ══ -->
 <div id="s2" class="screen">
-  <div class="step-indicator">
-    <div class="step done"><div class="step-dot">✓</div> Role</div>
-    <div class="step-line done"></div>
-    <div class="step active"><div class="step-dot">2</div> Channel</div>
-    <div class="step-line"></div>
-    <div class="step"><div class="step-dot">3</div> Checklist</div>
-  </div>
-  <button class="back-btn" onclick="goTo('s1')">← Back</button>
-  <p class="screen-heading">Where will this chart be published?</p>
-  <p class="screen-sub">This determines whether a logo or banner is required on the chart itself.</p>
-  <div class="cards">
-    <div class="card" onclick="setChannel('social')">
-      <div class="card-emoji">📲</div>
-      <div class="card-body">
-        <div class="card-title">Social media</div>
-        <div class="card-desc">LinkedIn, X/Twitter, Instagram, or similar. The chart appears standalone — logo and banner are required.</div>
+  <div class="page-banner">
+    <div class="page-banner-inner">
+      <button class="back-btn" onclick="goTo('s1')"><span data-icon="arrowLeft" data-size="13"></span> Change role</button>
+      <div class="top-bar">
+        <h1 id="pageHeading">Pre-publication checklist</h1>
+        <button class="restart-btn" onclick="resetAll()"><span data-icon="arrowCounterClockwise" data-size="13"></span> Reset</button>
       </div>
-      <div class="card-badge badge-social">Logo required</div>
-    </div>
-    <div class="card" onclick="setChannel('web')">
-      <div class="card-emoji">🌐</div>
-      <div class="card-body">
-        <div class="card-title">Web page</div>
-        <div class="card-desc">Embedded on oecd.org or a topic page. Branding is provided by the surrounding page — no logo on the chart itself.</div>
-      </div>
-      <div class="card-badge badge-web">No logo on chart</div>
-    </div>
-    <div class="card" onclick="setChannel('newsletter')">
-      <div class="card-emoji">✉️</div>
-      <div class="card-body">
-        <div class="card-title">Newsletter or email</div>
-        <div class="card-desc">Embedded in a branded email template. The template carries the identity — no logo required on the chart.</div>
-      </div>
-      <div class="card-badge" style="background:#f3f4f6;color:#6b7280;">No logo on chart</div>
-    </div>
-  </div>
-</div>
+      <p class="role-line">Checklist for <b id="roleLine"></b></p>
 
-<!-- ══ STEP 3: CHECKLIST ══ -->
-<div id="s3" class="screen">
-  <div class="step-indicator">
-    <div class="step done"><div class="step-dot">✓</div> Role</div>
-    <div class="step-line done"></div>
-    <div class="step done"><div class="step-dot">✓</div> Channel</div>
-    <div class="step-line done"></div>
-    <div class="step active"><div class="step-dot">3</div> Checklist</div>
-  </div>
-  <div class="top-bar">
-    <div>
-      <h1>📊 Pre-Publication Checklist</h1>
+      <div class="field-label">Where will it be published?</div>
+      <div class="segmented" id="channelToggle">
+        <button data-channel="web" onclick="setChannel('web')"><span data-icon="globe" data-size="14"></span> Web page</button>
+        <button data-channel="social" onclick="setChannel('social')"><span data-icon="shareNetwork" data-size="14"></span> Social media</button>
+        <button data-channel="newsletter" onclick="setChannel('newsletter')"><span data-icon="envelopeSimple" data-size="14"></span> Newsletter</button>
+      </div>
+      <p class="channel-hint" id="channelHint"></p>
     </div>
-    <button class="restart-btn" onclick="goTo('s1'); resetAll()">↩ Start over</button>
   </div>
-  <div class="context-pills">
-    <span class="ctx-pill ctx-pill-role" id="pillRole"></span>
-    <span class="ctx-pill ctx-pill-channel" id="pillChannel"></span>
+  <div class="page-content">
+    <div class="example-card">
+      <div class="example-head">
+        <span class="example-label">Example — <span id="exampleChannelLabel"></span></span>
+        <a class="example-link" id="exampleLink" href="#" target="_blank" rel="noopener">View full example <span data-icon="arrowRight" data-size="12"></span></a>
+      </div>
+      <div class="example-media" id="exampleMedia"></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 0 checked</div>
+    </div>
+    <div class="done-banner" id="doneBanner"><span data-icon="checkCircle" data-size="16"></span> All checks passed — ready to publish</div>
+
+    <div id="sectionsContainer"></div>
   </div>
-  <div class="progress-wrap">
-    <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-label" id="progressLabel">0 / 0 items checked</div>
-  </div>
-  <div class="done-banner" id="doneBanner">🎉 All checks passed — ready to publish!</div>
-  <div id="sectionsContainer"></div>
-  <button class="reset-btn" onclick="resetAll()">↺ Reset checklist</button>
 </div>
 
 </div><!-- /container -->
 <script>
 // ─────────────────────────────────────────
 // DATA
-// Each item has:
-//   roles:    which roles see it as an active checkbox
-//   channels: which channels show it (default = all channels)
-//   locked:   string shown as greyed "handled by tool" row for role='tool'
+// roles:    which roles see this item as an active checkbox
+// channels: which channels show it (omit = all channels)
+// locked:   shown as a collapsed "handled automatically" note for role='tool'
 // ─────────────────────────────────────────
 const ALL_CHANNELS = ['social','web','newsletter'];
 
+// ─────────────────────────────────────────
+// ICONS — Phosphor Icons (regular weight), inlined as SVG paths
+// https://phosphoricons.com — used under the MIT license
+// ─────────────────────────────────────────
+const ICON_PATHS = {
+  paintBrush: "M232,32a8,8,0,0,0-8-8c-44.08,0-89.31,49.71-114.43,82.63A60,60,0,0,0,32,164c0,30.88-19.54,44.73-20.47,45.37A8,8,0,0,0,16,224H92a60,60,0,0,0,57.37-77.57C182.3,121.31,232,76.08,232,32ZM92,208H34.63C41.38,198.41,48,183.92,48,164a44,44,0,1,1,44,44Zm32.42-94.45q5.14-6.66,10.09-12.55A76.23,76.23,0,0,1,155,121.49q-5.9,4.94-12.55,10.09A60.54,60.54,0,0,0,124.42,113.55Zm42.7-2.68a92.57,92.57,0,0,0-22-22c31.78-34.53,55.75-45,69.9-47.91C212.17,55.12,201.65,79.09,167.12,110.87Z",
+  gearSix: "M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A112.1,112.1,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.62a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.08,8.08,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8.08,8.08,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z",
+  paperPlaneTilt: "M227.32,28.68a16,16,0,0,0-15.66-4.08l-.15,0L19.57,82.84a16,16,0,0,0-2.49,29.8L102,154l41.3,84.87A15.86,15.86,0,0,0,157.74,248q.69,0,1.38-.06a15.88,15.88,0,0,0,14-11.51l58.2-191.94c0-.05,0-.1,0-.15A16,16,0,0,0,227.32,28.68ZM157.83,231.85l-.05.14,0-.07-40.06-82.3,48-48a8,8,0,0,0-11.31-11.31l-48,48L24.08,98.25l-.07,0,.14,0L216,40Z",
+  arrowRight: "M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z",
+  arrowLeft: "M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z",
+  arrowCounterClockwise: "M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z",
+  palette: "M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z",
+  textAa: "M87.24,52.59a8,8,0,0,0-14.48,0l-64,136a8,8,0,1,0,14.48,6.81L39.9,160h80.2l16.66,35.4a8,8,0,1,0,14.48-6.81ZM47.43,144,80,74.79,112.57,144ZM200,96c-12.76,0-22.73,3.47-29.63,10.32a8,8,0,0,0,11.26,11.36c3.8-3.77,10-5.68,18.37-5.68,13.23,0,24,9,24,20v3.22A42.76,42.76,0,0,0,200,128c-22.06,0-40,16.15-40,36s17.94,36,40,36a42.73,42.73,0,0,0,24-7.25,8,8,0,0,0,16-.75V132C240,112.15,222.06,96,200,96Zm0,88c-13.23,0-24-9-24-20s10.77-20,24-20,24,9,24,20S213.23,184,200,184Z",
+  ruler: "M235.32,73.37,182.63,20.69a16,16,0,0,0-22.63,0L20.68,160a16,16,0,0,0,0,22.63l52.69,52.68a16,16,0,0,0,22.63,0L235.32,96A16,16,0,0,0,235.32,73.37ZM84.68,224,32,171.31l32-32,26.34,26.35a8,8,0,0,0,11.32-11.32L75.31,128,96,107.31l26.34,26.35a8,8,0,0,0,11.32-11.32L107.31,96,128,75.31l26.34,26.35a8,8,0,0,0,11.32-11.32L139.31,64l32-32L224,84.69Z",
+  chartBar: "M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z",
+  tag: "M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63Zm-96,96L48,132.69V48h84.69L232,147.31ZM96,84A12,12,0,1,1,84,72,12,12,0,0,1,96,84Z",
+  downloadSimple: "M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z",
+  globe: "M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z",
+  shareNetwork: "M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.66-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Zm0-128a24,24,0,1,1-24,24A24,24,0,0,1,176,32ZM64,152a24,24,0,1,1,24-24A24,24,0,0,1,64,152Zm112,72a24,24,0,1,1,24-24A24,24,0,0,1,176,224Z",
+  envelopeSimple: "M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z",
+  lockSimple: "M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z",
+  check: "M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z",
+  caretRight: "M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z",
+  checkCircle: "M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z",
+};
+
+function icon(name, size) {
+  size = size || 16;
+  return `<svg class="ph" viewBox="0 0 256 256" width="${size}" height="${size}" fill="currentColor" aria-hidden="true"><path d="${ICON_PATHS[name]}"/></svg>`;
+}
+
+function initStaticIcons() {
+  document.querySelectorAll('[data-icon]').forEach(el => {
+    el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 16);
+  });
+}
+
 const sections = [
   {
-    icon:"🎨", color:"#ede9fe", label:"Branding & Identity",
+    icon:"palette", label:"Branding & identity",
     items:[
-      { text:"Logo/banner is present and correctly positioned",
+      { id:"brand-logo-present", text:"Logo/banner is present and correctly positioned",
         note:"Check placement zone against communication guidelines",
         roles:["designer","tool","social"], channels:["social"] },
-      { text:"Logo is not stretched, cropped, or resized below the minimum allowed size",
+      { id:"brand-logo-quality", text:"Logo is not stretched, cropped, or resized below the minimum size",
         roles:["designer","tool","social"], channels:["social"] },
-      { text:"Brand colors are used exclusively — no off-palette shades",
+      { id:"brand-colors", text:"Brand colors are used exclusively — no off-palette shades",
         note:"Cross-check hex values against the design system",
-        roles:["designer"], channels:ALL_CHANNELS,
-        locked:"Brand palette is enforced by the tool" },
-      { text:"No unauthorized fonts or font weights are used",
-        roles:["designer"], channels:ALL_CHANNELS,
-        locked:"Typography is locked in the tool template" },
-      { text:"Brand URL or mandatory credit line is included",
+        roles:["designer"], locked:"Brand palette is enforced by the tool" },
+      { id:"brand-fonts", text:"No unauthorized fonts or font weights are used",
+        roles:["designer"], locked:"Typography is locked in the tool template" },
+      { id:"brand-credit", text:"Brand URL or mandatory credit line is included",
         note:"Only if required by your communication guidelines",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
+        roles:["designer","tool"] },
     ]
   },
   {
-    icon:"🖋️", color:"#fef3c7", label:"Typography",
+    icon:"textAa", label:"Typography",
     items:[
-      { text:"Title uses the correct typeface, weight, and size",
-        roles:["designer"], channels:ALL_CHANNELS,
-        locked:"Title style is defined by the tool template" },
-      { text:"Subtitle or annotation text is properly styled and distinct from the title",
-        roles:["designer"], channels:ALL_CHANNELS,
-        locked:"Text hierarchy is handled by the tool" },
-      { text:"Axis labels, legend text, and data labels are legible at final export size",
-        note:"No text should fall below ~10pt equivalent at published dimensions",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Capitalization style is consistent across all text elements",
+      { id:"type-title-style", text:"Title uses the correct typeface, weight, and size",
+        roles:["designer"], locked:"Title style is defined by the tool template" },
+      { id:"type-subtitle", text:"Subtitle/annotation text is styled and clearly distinct from the title",
+        roles:["designer"], locked:"Text hierarchy is handled by the tool" },
+      { id:"type-legibility", text:"Axis labels, legend, and data labels are legible at final export size",
+        note:"Nothing below ~10pt equivalent at published dimensions",
+        roles:["designer","tool"] },
+      { id:"type-case", text:"Capitalization is consistent across all text elements",
         note:"Sentence case throughout, or title case throughout — pick one",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"No orphan words or awkward line breaks in the title or key annotations",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
+        roles:["designer","tool"] },
+      { id:"type-breaks", text:"No orphan words or awkward line breaks in the title or key annotations",
+        roles:["designer","tool"] },
     ]
   },
   {
-    icon:"📐", color:"#e0f2fe", label:"Layout, Margins & Spacing",
+    icon:"ruler", label:"Layout, margins & spacing",
     items:[
-      { text:"Canvas size matches the required format for the target channel",
-        note:"e.g. 1080×1080 for Instagram, 1200×628 for LinkedIn, 600px wide for newsletters",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Outer margins and padding match the spacing tokens from the design system",
-        roles:["designer"], channels:ALL_CHANNELS,
-        locked:"Margins and padding are set by the tool" },
-      { text:"No visual element bleeds into the safe zone or is clipped at the canvas edge",
-        roles:["designer"], channels:ALL_CHANNELS,
-        locked:"Layout boundaries are enforced by the tool" },
-      { text:"Legend is correctly positioned and does not overlap data",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Source line and footnotes are placed in the footer area and fully visible",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
+      { id:"layout-canvas", text:"Canvas size matches the required format for the target channel",
+        note:"e.g. 1080×1080 Instagram, 1200×628 LinkedIn, 600px wide newsletters",
+        roles:["designer","tool"] },
+      { id:"layout-margins", text:"Outer margins and padding match the design system's spacing tokens",
+        roles:["designer"], locked:"Margins and padding are set by the tool" },
+      { id:"layout-bleed", text:"No element bleeds into the safe zone or is clipped at the canvas edge",
+        roles:["designer"], locked:"Layout boundaries are enforced by the tool" },
+      { id:"layout-legend", text:"Legend is correctly positioned and does not overlap data",
+        roles:["designer","tool"] },
+      { id:"layout-source", text:"Source line and footnotes sit in the footer area and are fully visible",
+        roles:["designer","tool"] },
     ]
   },
   {
-    icon:"📊", color:"#fce7f3", label:"Data Accuracy & Integrity",
+    icon:"chartBar", label:"Data accuracy & integrity",
     items:[
-      { text:"All data values have been verified against the source dataset",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"The chart type is appropriate for the data and the story being told",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Axes start at the correct baseline",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Scale and intervals are consistent and not visually misleading",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Units are clearly stated on the chart",
-        note:"%, index, USD, millions, per 1 000 inhabitants — whichever applies",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
-      { text:"The reference time period or year is explicitly labeled",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
-      { text:"Data source is cited in full with correct attribution wording",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+      { id:"data-verified", text:"All data values have been verified against the source dataset",
+        roles:["designer","tool"] },
+      { id:"data-charttype", text:"The chart type is appropriate for the data and the story being told",
+        roles:["designer","tool"] },
+      { id:"data-baseline", text:"Axes start at the correct baseline",
+        roles:["designer","tool"] },
+      { id:"data-scale", text:"Scale and intervals are consistent and not visually misleading",
+        roles:["designer","tool"] },
+      { id:"data-units", text:"Units are clearly stated on the chart",
+        note:"%, index, USD, millions, per 1,000 inhabitants — whichever applies",
+        roles:["designer","tool","social"] },
+      { id:"data-period", text:"The reference time period or year is explicitly labeled",
+        roles:["designer","tool","social"] },
+      { id:"data-source", text:"Data source is cited in full with correct attribution wording",
+        roles:["designer","tool","social"] },
     ]
   },
   {
-    icon:"✍️", color:"#dcfce7", label:"Titles, Labels & Annotations",
+    icon:"tag", label:"Titles, labels & annotations",
     items:[
-      { text:"The title is self-explanatory without needing surrounding editorial text",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
-      { text:"The title communicates the key takeaway, not just the topic",
-        note:"\"GDP fell in 3 of 5 regions\" beats \"GDP by region\"",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
-      { text:"All data labels are visible and free from overlaps with each other or chart elements",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Annotations and callouts are accurate and clearly anchored to the right data point",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Country names, entity names, and acronyms are spelled and capitalized correctly",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"No placeholder text remains",
+      { id:"lbl-selfexplanatory", text:"The title is self-explanatory without needing surrounding editorial text",
+        roles:["designer","tool","social"] },
+      { id:"lbl-takeaway", text:"The title communicates the key takeaway, not just the topic",
+        note:"“GDP fell in 3 of 5 regions” beats “GDP by region”",
+        roles:["designer","tool","social"] },
+      { id:"lbl-overlap", text:"All data labels are visible and free of overlaps with each other or chart elements",
+        roles:["designer","tool"] },
+      { id:"lbl-annotations", text:"Annotations and callouts are accurate and clearly anchored to the right data point",
+        roles:["designer","tool"] },
+      { id:"lbl-names", text:"Country names, entity names, and acronyms are spelled and capitalized correctly",
+        roles:["designer","tool"] },
+      { id:"lbl-placeholder", text:"No placeholder text remains",
         note:"No Lorem ipsum, [TBC], TODO, or template defaults",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
-      { text:"A plain-language caption is ready for the post",
-        note:"Describe what the chart shows for readers who cannot see images",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+        roles:["designer","tool","social"] },
+      { id:"lbl-caption", text:"A plain-language caption is ready for the post",
+        note:"Describe what the chart shows, for readers who cannot see images",
+        roles:["designer","tool","social"] },
     ]
   },
   {
-    icon:"💾", color:"#f3f4f6", label:"Export & File Quality",
+    icon:"downloadSimple", label:"Export & file quality",
     items:[
-      { text:"File is exported at the correct resolution",
-        note:"Minimum 2× (144 dpi) for digital screens; 300 dpi for print or press use",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"Export format matches the channel requirement",
+      { id:"exp-resolution", text:"File is exported at the correct resolution",
+        note:"Minimum 2× (144 dpi) for digital screens; 300 dpi for print or press",
+        roles:["designer","tool"], channels:["social","newsletter"] },
+      { id:"exp-format", text:"Export format matches the channel requirement",
         note:"PNG for social media; PDF or SVG for newsletters and press kits",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"File size is acceptable and shows no visible compression artefacts",
-        roles:["designer","tool"], channels:ALL_CHANNELS },
-      { text:"The final chart has been previewed in the actual posting context",
-        note:"Feed simulator, email client, or embedded page view — not just desktop at 100%",
-        roles:["designer","tool","social"], channels:ALL_CHANNELS },
+        roles:["designer","tool"], channels:["social","newsletter"] },
+      { id:"exp-quality", text:"File size is acceptable with no visible compression artefacts",
+        roles:["designer","tool"], channels:["social","newsletter"] },
+      { id:"exp-preview", text:"The final chart has been previewed in its actual posting context",
+        note:"Feed simulator, email client, or embedded page — not just desktop at 100%",
+        roles:["designer","tool","social"] },
     ]
   },
 ];
 
 // ─────────────────────────────────────────
-// ROUTING STATE
+// STATE
 // ─────────────────────────────────────────
 let selRole    = null;
-let selChannel = null;
-let state      = {};
-let activeItems = [];
+let selChannel = 'web';
+let checked    = new Set();
+let activeIds  = [];
 
 const roleLabels = {
-  designer: "🎨 Designer — from scratch",
-  tool:     "⚙️ Chartbuilder / Flourish",
-  social:   "📱 Social media / newsletter",
+  designer: "a designer building from scratch",
+  tool:     "a chart producer using the internal tool",
+  social:   "someone publishing a finished chart",
 };
-const channelLabels = {
-  social:     { text:"📲 Social media",   cls:"" },
-  web:        { text:"🌐 Web page",        cls:"web" },
-  newsletter: { text:"✉️ Newsletter",      cls:"newsletter" },
+const roleHeadings = {
+  designer: "Designer checklist",
+  tool:     "Chart producer checklist",
+  social:   "Quick publishing check",
 };
+const channelHints = {
+  web:        "Embedded on a web page — branding comes from the surrounding page, no logo needed on the chart.",
+  social:     "Standalone on social media — the chart needs its own logo/banner.",
+  newsletter: "Embedded in a branded email template — no logo needed on the chart.",
+};
+const examples = {
+  web:        { type:"iframe", src:"https://flo.uri.sh/visualisation/30016203/embed?auto=1", label:"Web page" },
+  social:     { type:"image",  src:"best-practice-SM.png", label:"Social media" },
+  newsletter: { type:"image",  src:"best-practice-NL.png", label:"Newsletter" },
+};
+
+function renderExample() {
+  const ex = examples[selChannel];
+  document.getElementById('exampleChannelLabel').textContent = ex.label;
+  document.getElementById('exampleLink').href = ex.src;
+  document.getElementById('exampleMedia').innerHTML = ex.type === 'iframe'
+    ? `<iframe src="${ex.src}" loading="lazy" title="Example chart — ${ex.label}"></iframe>`
+    : `<img src="${ex.src}" alt="Example best-practice chart for ${ex.label}" loading="lazy">`;
+}
+
+function itemApplies(item) {
+  return item.roles.includes(selRole) && (!item.channels || item.channels.includes(selChannel));
+}
 
 function goTo(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
 }
 
-function setRole(role) {
+function selectRole(role) {
   selRole = role;
+  checked = new Set();
+  document.getElementById('pageHeading').textContent = roleHeadings[role];
+  document.getElementById('roleLine').textContent = roleLabels[role];
+  document.querySelectorAll('#channelToggle button').forEach(b =>
+    b.classList.toggle('active', b.dataset.channel === selChannel));
+  document.getElementById('channelHint').textContent = channelHints[selChannel];
+  renderExample();
+  build();
   goTo('s2');
 }
 
 function setChannel(channel) {
   selChannel = channel;
-  buildAndShow();
-}
-
-function buildAndShow() {
-  state = {};
-  activeItems = [];
-  document.getElementById('pillRole').textContent    = roleLabels[selRole];
-  const ch = channelLabels[selChannel];
-  const pill = document.getElementById('pillChannel');
-  pill.textContent = ch.text;
-  pill.className   = `ctx-pill ctx-pill-channel ${ch.cls}`;
-  buildChecklist();
-  updateProgress();
-  goTo('s3');
+  document.querySelectorAll('#channelToggle button').forEach(b =>
+    b.classList.toggle('active', b.dataset.channel === channel));
+  document.getElementById('channelHint').textContent = channelHints[channel];
+  renderExample();
+  build();
 }
 
 // ─────────────────────────────────────────
 // BUILD
 // ─────────────────────────────────────────
-function buildChecklist() {
+function build() {
   const container = document.getElementById('sectionsContainer');
   container.innerHTML = '';
+  activeIds = [];
 
-  sections.forEach((section, si) => {
-    const activeInSection = section.items.filter(item =>
-      item.roles.includes(selRole) &&
-      item.channels.includes(selChannel)
-    );
-    const lockedInSection = (selRole === 'tool')
-      ? section.items.filter(item =>
-          item.locked &&
-          !item.roles.includes('tool') &&
-          item.channels.includes(selChannel))
-      : [];
+  if (selRole === 'social') {
+    buildFlatList(container);
+  } else {
+    sections.forEach((section, si) => buildSection(container, section, si));
+  }
+  updateProgress();
+}
 
-    if (activeInSection.length === 0 && lockedInSection.length === 0) return;
+function buildFlatList(container) {
+  const items = sections.flatMap(s => s.items).filter(itemApplies);
+  if (items.length === 0) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'flat-list';
+  items.forEach(item => wrap.appendChild(renderItem(item)));
+  container.appendChild(wrap);
+}
 
-    const secEl = document.createElement('div');
-    secEl.className = 'section';
+function buildSection(container, section, si) {
+  const active = section.items.filter(itemApplies);
+  const locked = (selRole === 'tool')
+    ? section.items.filter(item => item.locked && !item.roles.includes('tool') && (!item.channels || item.channels.includes(selChannel)))
+    : [];
+  if (active.length === 0 && locked.length === 0) return;
 
-    const header = document.createElement('div');
-    header.className = 'section-header open';
-    header.innerHTML = `
-      <div class="section-icon" style="background:${section.color}">${section.icon}</div>
-      <div class="section-title">${section.label}</div>
-      <span class="section-count" id="cnt-${si}">0/${activeInSection.length}</span>
-      <span class="chev open" id="chev-${si}">▶</span>
-    `;
+  const secEl = document.createElement('div');
+  secEl.className = 'section';
 
-    const itemsDiv = document.createElement('div');
-    itemsDiv.className = 'items open';
+  const header = document.createElement('div');
+  header.className = 'section-header';
+  header.innerHTML = `
+    <div class="section-icon">${icon(section.icon, 15)}</div>
+    <div class="section-title">${section.label}</div>
+    <span class="section-count" id="cnt-${si}">0/${active.length}</span>
+    <span class="chev open" id="chev-${si}">${icon('caretRight', 11)}</span>
+  `;
 
-    activeInSection.forEach(item => {
-      const key = `${si}__${item.text.slice(0,28).replace(/\W/g,'_')}`;
-      state[key] = false;
-      activeItems.push({ key, si, count: activeInSection.length });
+  const itemsDiv = document.createElement('div');
+  itemsDiv.className = 'items open';
+  active.forEach(item => itemsDiv.appendChild(renderItem(item)));
 
-      const div = document.createElement('div');
-      div.className = 'item';
-      div.id = `itm-${key}`;
-      div.innerHTML = `
-        <div class="checkmark"></div>
-        <span class="item-text">${item.text}${item.note ? `<span class="item-note">ℹ︎ ${item.note}</span>` : ''}</span>
-      `;
-      div.onclick = () => toggleItem(key, si, activeInSection.length);
-      itemsDiv.appendChild(div);
+  if (locked.length) {
+    const details = document.createElement('details');
+    details.className = 'locked-wrap';
+    details.innerHTML = `<summary class="locked-summary">${icon('lockSimple', 12)} ${locked.length} item${locked.length > 1 ? 's' : ''} handled automatically by the tool</summary>`;
+    const list = document.createElement('div');
+    list.className = 'locked-items';
+    locked.forEach(item => {
+      const p = document.createElement('div');
+      p.className = 'locked-item';
+      p.textContent = item.text;
+      list.appendChild(p);
     });
+    details.appendChild(list);
+    itemsDiv.appendChild(details);
+  }
 
-    lockedInSection.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'item-tool';
-      div.innerHTML = `<div class="tool-icon">🔒</div><span class="tool-text">${item.text}</span><span class="tool-badge">Tool</span>`;
-      itemsDiv.appendChild(div);
-    });
+  header.onclick = () => {
+    const open = itemsDiv.classList.toggle('open');
+    header.querySelector(`#chev-${si}`).classList.toggle('open', open);
+  };
 
-    header.onclick = () => {
-      const open = itemsDiv.classList.toggle('open');
-      header.classList.toggle('open', open);
-      document.getElementById(`chev-${si}`).classList.toggle('open', open);
-    };
+  secEl.appendChild(header);
+  secEl.appendChild(itemsDiv);
+  container.appendChild(secEl);
 
-    secEl.appendChild(header);
-    secEl.appendChild(itemsDiv);
-    container.appendChild(secEl);
-  });
+  updateSectionCount(si, active.map(i => i.id));
+}
+
+function renderItem(item) {
+  activeIds.push(item.id);
+  const div = document.createElement('div');
+  div.className = 'item' + (checked.has(item.id) ? ' checked' : '');
+  div.id = `itm-${item.id}`;
+  div.innerHTML = `
+    <div class="checkmark">${icon('check', 12)}</div>
+    <span class="item-text">${item.text}${item.note ? `<span class="item-note">${item.note}</span>` : ''}</span>
+  `;
+  div.onclick = () => toggleItem(item.id);
+  return div;
 }
 
 // ─────────────────────────────────────────
 // INTERACTION
 // ─────────────────────────────────────────
-function toggleItem(key, si) {
-  state[key] = !state[key];
-  document.getElementById(`itm-${key}`).classList.toggle('checked', state[key]);
-  const sKeys = activeItems.filter(i => i.si === si).map(i => i.key);
-  const checked = sKeys.filter(k => state[k]).length;
-  const el = document.getElementById(`cnt-${si}`);
-  if (el) el.textContent = `${checked}/${sKeys.length}`;
+function toggleItem(id) {
+  checked.has(id) ? checked.delete(id) : checked.add(id);
+  document.getElementById(`itm-${id}`).classList.toggle('checked', checked.has(id));
+  sections.forEach((section, si) => {
+    const el = document.getElementById(`cnt-${si}`);
+    if (!el) return;
+    const ids = section.items.filter(itemApplies).map(i => i.id);
+    updateSectionCount(si, ids);
+  });
   updateProgress();
+}
+
+function updateSectionCount(si, ids) {
+  const el = document.getElementById(`cnt-${si}`);
+  if (!el) return;
+  const done = ids.filter(id => checked.has(id)).length;
+  el.textContent = `${done}/${ids.length}`;
 }
 
 function updateProgress() {
-  const total   = activeItems.length;
-  const checked = Object.values(state).filter(Boolean).length;
-  const pct = total ? Math.round((checked / total) * 100) : 0;
+  const total = activeIds.length;
+  const done  = activeIds.filter(id => checked.has(id)).length;
+  const pct   = total ? Math.round((done / total) * 100) : 0;
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = `${checked} / ${total} items checked`;
-  document.getElementById('doneBanner').classList.toggle('visible', checked === total && total > 0);
+  document.getElementById('progressLabel').textContent = `${done} / ${total} checked`;
+  document.getElementById('doneBanner').classList.toggle('visible', done === total && total > 0);
 }
 
 function resetAll() {
-  activeItems.forEach(({ key, si }) => {
-    state[key] = false;
-    const el = document.getElementById(`itm-${key}`);
-    if (el) el.classList.remove('checked');
-  });
-  sections.forEach((_, si) => {
-    const sKeys = activeItems.filter(i => i.si === si).map(i => i.key);
-    const el = document.getElementById(`cnt-${si}`);
-    if (el) el.textContent = `0/${sKeys.length}`;
-  });
-  updateProgress();
+  checked = new Set();
+  build();
 }
+
+initStaticIcons();
 </script>
 </body>
 </html>
