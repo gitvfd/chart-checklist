@@ -29,7 +29,7 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   background: var(--bg); color: var(--text); min-height: 100vh;
-  font-size: 15px; line-height: 1.4;
+  font-size: 16px; line-height: 1.4;
 }
 .container { width: 100%; }
 
@@ -38,8 +38,8 @@ body {
   width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
   background: var(--banner-bg); color: #ffffff;
 }
-.page-banner-inner { max-width: 640px; margin: 0 auto; padding: 40px 18px 24px; }
-.page-content { max-width: 640px; margin: 0 auto; padding: 22px 18px 60px; }
+.page-banner-inner { max-width: 760px; margin: 0 auto; padding: 40px 16px 24px; }
+.page-content { max-width: 760px; margin: 0 auto; padding: 22px 16px 60px; }
 
 /* ── SCREENS ── */
 .screen { display: none; }
@@ -47,9 +47,9 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
 /* ── INTRO ── */
-.eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-.page-title { font-size: 21px; font-weight: 750; letter-spacing: -0.3px; margin-bottom: 6px; }
-.page-sub { font-size: 13.5px; color: var(--text-2); margin-bottom: 26px; line-height: 1.55; max-width: 50ch; }
+.eyebrow { font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.page-title { font-size: 22px; font-weight: 750; letter-spacing: -0.3px; margin-bottom: 6px; }
+.page-sub { font-size: 14.5px; color: var(--text-2); margin-bottom: 26px; line-height: 1.55; max-width: 50ch; }
 
 /* ── ROLE CARDS ── */
 .cards { display: flex; flex-direction: column; gap: 10px; }
@@ -65,78 +65,78 @@ body {
   color: var(--accent-strong); display: flex; align-items: center; justify-content: center;
 }
 .card-body { flex: 1; min-width: 0; }
-.card-title { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-.card-desc { font-size: 12.5px; color: var(--text-2); line-height: 1.5; margin-bottom: 6px; }
-.card-meta { font-size: 11.5px; color: var(--text-3); font-weight: 600; }
+.card-title { font-size: 15.5px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.card-desc { font-size: 13.5px; color: var(--text-2); line-height: 1.5; margin-bottom: 6px; }
+.card-meta { font-size: 12.5px; color: var(--text-3); font-weight: 600; }
 .card-arrow { color: var(--text-3); flex-shrink: 0; margin-top: 10px; display: flex; }
 
 /* ── TOP BAR (checklist screen) ── */
 .back-btn {
-  background: none; border: none; font-size: 12.5px; font-weight: 600; color: var(--text-3);
+  background: none; border: none; font-size: 13.5px; font-weight: 600; color: var(--text-3);
   cursor: pointer; padding: 4px 0; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 5px;
 }
 .back-btn:hover { color: var(--accent); }
 .top-bar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
-.top-bar h1 { font-size: 19px; font-weight: 750; letter-spacing: -0.3px; line-height: 1.25; }
-.role-line { font-size: 12.5px; color: var(--text-2); margin-top: 5px; margin-bottom: 20px; }
+.top-bar h1 { font-size: 20px; font-weight: 750; letter-spacing: -0.3px; line-height: 1.25; }
+.role-line { font-size: 13.5px; color: var(--text-2); margin-top: 5px; margin-bottom: 20px; }
 .role-line b { color: var(--text); font-weight: 650; }
 .restart-btn {
   flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px;
-  padding: 7px 12px; font-size: 12px; font-weight: 600; color: var(--text-2); cursor: pointer; white-space: nowrap;
+  padding: 7px 12px; font-size: 13px; font-weight: 600; color: var(--text-2); cursor: pointer; white-space: nowrap;
   display: inline-flex; align-items: center; gap: 6px;
 }
 .restart-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ── CHANNEL TOGGLE ── */
-.field-label { font-size: 11.5px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
+.field-label { font-size: 12.5px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
 .segmented {
   display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px;
   padding: 3px; margin-bottom: 22px; gap: 2px;
 }
 .segmented button {
-  border: none; background: transparent; padding: 7px 15px; border-radius: 999px; font-size: 12.5px;
+  border: none; background: transparent; padding: 7px 15px; border-radius: 999px; font-size: 13.5px;
   font-weight: 650; color: var(--text-2); cursor: pointer; transition: background .15s, color .15s;
   display: inline-flex; align-items: center; gap: 6px;
 }
 .segmented button.active { background: var(--surface); color: var(--accent-strong); box-shadow: var(--shadow); }
-.channel-hint { font-size: 11.5px; color: var(--text-3); margin-top: -14px; margin-bottom: 22px; }
+.channel-hint { font-size: 12.5px; color: var(--text-3); margin-top: -14px; margin-bottom: 22px; }
 
 /* ── PANEL CARD (example / your-chart) ── */
 .panel-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
 .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--border); }
-.panel-label { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; }
-.panel-link { font-size: 12px; font-weight: 650; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.panel-label { font-size: 12px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; }
+.panel-link { font-size: 13px; font-weight: 650; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .panel-link:hover { text-decoration: underline; }
 .panel-media { background: var(--surface-2); display: flex; align-items: center; justify-content: center; padding: 16px; min-height: 90px; }
-.panel-media img { display: block; max-height: 320px; width: auto; max-width: 100%; border-radius: 8px; box-shadow: var(--shadow); }
-.panel-media iframe { width: 100%; height: 340px; border: 0; display: block; border-radius: 8px; background: var(--surface); }
-.panel-empty { font-size: 12px; color: var(--text-3); text-align: center; padding: 20px 10px; }
+.panel-media img { display: block; width: 100%; max-width: 500px; height: auto; border-radius: 8px; box-shadow: var(--shadow); }
+.panel-media iframe { width: 100%; max-width: 500px; height: 300px; border: 0; display: block; border-radius: 8px; background: var(--surface); }
+.panel-empty { font-size: 13px; color: var(--text-3); text-align: center; padding: 20px 10px; }
 
 /* ── YOUR CHART (load / upload) ── */
 .your-chart-input { padding: 12px 14px; border-bottom: 1px solid var(--border); }
 .chart-load-row { display: flex; gap: 8px; }
 .chart-load-row input {
   flex: 1; min-width: 0; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px;
-  font-size: 12.5px; color: var(--text); background: var(--surface);
+  font-size: 13.5px; color: var(--text); background: var(--surface);
 }
 .chart-load-row input:focus { outline: none; border-color: var(--accent); }
 .load-btn {
   flex-shrink: 0; padding: 8px 14px; border: none; border-radius: 8px; background: var(--accent);
-  color: #fff; font-size: 12.5px; font-weight: 650; cursor: pointer;
+  color: #fff; font-size: 13.5px; font-weight: 650; cursor: pointer;
 }
 .load-btn:hover { background: var(--accent-strong); }
 .upload-btn {
   display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px solid var(--border);
-  border-radius: 8px; font-size: 12.5px; font-weight: 650; color: var(--text-2); cursor: pointer;
+  border-radius: 8px; font-size: 13.5px; font-weight: 650; color: var(--text-2); cursor: pointer;
 }
 .upload-btn:hover { border-color: var(--accent); color: var(--accent); }
-.upload-hint { display: block; margin-top: 7px; font-size: 11px; color: var(--text-3); }
+.upload-hint { display: block; margin-top: 7px; font-size: 12px; color: var(--text-3); }
 
 /* ── COMPARE LAYOUT (quick-check role) ── */
-.page-content.wide { max-width: 1080px; }
-.compare-layout { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
-@media (min-width: 860px) {
-  .compare-layout:not(.single-col) { grid-template-columns: minmax(280px, 380px) 1fr; }
+.page-content.wide { max-width: 1120px; }
+.compare-layout { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; }
+@media (min-width: 960px) {
+  .compare-layout:not(.single-col) { grid-template-columns: 540px minmax(360px, 620px); justify-content: center; }
   .compare-layout:not(.single-col) .compare-left { position: sticky; top: 20px; }
 }
 .compare-left { display: flex; flex-direction: column; }
@@ -145,10 +145,10 @@ body {
 .progress-wrap { margin-bottom: 20px; }
 .progress-bg { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 6px; }
 .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width .25s ease; width: 0%; }
-.progress-label { font-size: 11.5px; color: var(--text-3); text-align: right; font-weight: 600; }
+.progress-label { font-size: 12.5px; color: var(--text-3); text-align: right; font-weight: 600; }
 .done-banner {
   display: none; background: var(--success-soft); border: 1.5px solid var(--success); border-radius: var(--radius-md);
-  padding: 12px 16px; text-align: center; font-size: 13.5px; font-weight: 700; color: var(--success); margin-bottom: 18px;
+  padding: 12px 16px; text-align: center; font-size: 14.5px; font-weight: 700; color: var(--success); margin-bottom: 18px;
   align-items: center; justify-content: center; gap: 8px;
 }
 .done-banner.visible { display: flex; }
@@ -161,8 +161,8 @@ body {
   width: 28px; height: 28px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-strong); flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
-.section-title { font-size: 13px; font-weight: 700; flex: 1; }
-.section-count { font-size: 11px; color: var(--text-3); font-weight: 650; }
+.section-title { font-size: 14px; font-weight: 700; flex: 1; }
+.section-count { font-size: 12px; color: var(--text-3); font-weight: 650; }
 .chev { color: var(--text-3); margin-left: 2px; transition: transform .18s; display: inline-flex; }
 .chev.open { transform: rotate(90deg); }
 .items { display: none; padding: 2px 0 8px; border-top: 1px solid var(--border); }
@@ -181,8 +181,8 @@ body {
 .checkmark svg { opacity: 0; transition: opacity .1s; }
 .item.checked .checkmark { background: var(--accent); border-color: var(--accent); }
 .item.checked .checkmark svg { opacity: 1; }
-.item-text { font-size: 13.2px; line-height: 1.5; color: var(--text); flex: 1; }
-.item-note { font-size: 11.5px; color: var(--text-3); display: block; margin-top: 3px; line-height: 1.45; }
+.item-text { font-size: 14.2px; line-height: 1.5; color: var(--text); flex: 1; }
+.item-note { font-size: 12.5px; color: var(--text-3); display: block; margin-top: 3px; line-height: 1.45; }
 
 /* flat list (quick-check role) */
 .flat-list { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px 0; margin-bottom: 9px; }
@@ -193,17 +193,17 @@ body {
 /* ── locked/tool-handled disclosure ── */
 .locked-wrap { border-top: 1px solid var(--border); }
 .locked-summary {
-  list-style: none; cursor: pointer; padding: 9px 15px; font-size: 11.5px; font-weight: 650;
+  list-style: none; cursor: pointer; padding: 9px 15px; font-size: 12.5px; font-weight: 650;
   color: var(--text-3); display: flex; align-items: center; gap: 6px;
 }
 .locked-summary::-webkit-details-marker { display: none; }
 .locked-summary:hover { color: var(--text-2); }
 .locked-items { padding: 0 15px 10px 34px; }
-.locked-item { font-size: 12px; color: var(--text-3); line-height: 1.6; }
+.locked-item { font-size: 13px; color: var(--text-3); line-height: 1.6; }
 
 .reset-btn {
   display: block; width: 100%; margin-top: 10px; padding: 11px; background: var(--surface);
-  border: 1.5px solid var(--border); border-radius: var(--radius-md); font-size: 12.5px; font-weight: 650;
+  border: 1.5px solid var(--border); border-radius: var(--radius-md); font-size: 13.5px; font-weight: 650;
   color: var(--text-2); cursor: pointer; text-align: center; transition: border-color .15s, color .15s;
 }
 .reset-btn:hover { border-color: #e0857a; color: #d1493a; }
@@ -370,6 +370,28 @@ function initStaticIcons() {
 
 const sections = [
   {
+    icon:"tag", label:"Titles, labels & annotations",
+    items:[
+      { id:"lbl-selfexplanatory", text:"The title is self-explanatory without needing surrounding editorial text",
+        roles:["designer","tool","social"] },
+      { id:"lbl-takeaway", text:"The title communicates the key takeaway, not just the topic",
+        note:"“GDP fell in 3 of 5 regions” beats “GDP by region”",
+        roles:["designer","tool","social"] },
+      { id:"lbl-overlap", text:"All data labels are visible and free of overlaps with each other or chart elements",
+        roles:["designer","tool"] },
+      { id:"lbl-annotations", text:"Annotations and callouts are accurate and clearly anchored to the right data point",
+        roles:["designer","tool"] },
+      { id:"lbl-names", text:"Country names, entity names, and acronyms are spelled and capitalized correctly",
+        roles:["designer","tool"] },
+      { id:"lbl-placeholder", text:"No placeholder text remains",
+        note:"No Lorem ipsum, [TBC], TODO, or template defaults",
+        roles:["designer","tool","social"] },
+      { id:"lbl-caption", text:"A plain-language caption is ready for the post",
+        note:"Describe what the chart shows, for readers who cannot see images",
+        roles:["designer","tool","social"] },
+    ]
+  },
+  {
     icon:"palette", label:"Branding & identity",
     items:[
       { id:"brand-logo-present", text:"Logo/banner is present and correctly positioned",
@@ -385,6 +407,26 @@ const sections = [
       { id:"brand-credit", text:"Brand URL or mandatory credit line is included",
         note:"Only if required by your communication guidelines",
         roles:["designer","tool"] },
+    ]
+  },
+  {
+    icon:"chartBar", label:"Data accuracy & integrity",
+    items:[
+      { id:"data-verified", text:"All data values have been verified against the source dataset",
+        roles:["designer","tool"] },
+      { id:"data-charttype", text:"The chart type is appropriate for the data and the story being told",
+        roles:["designer","tool"] },
+      { id:"data-baseline", text:"Axes start at the correct baseline",
+        roles:["designer","tool"] },
+      { id:"data-scale", text:"Scale and intervals are consistent and not visually misleading",
+        roles:["designer","tool"] },
+      { id:"data-units", text:"Units are clearly stated on the chart",
+        note:"%, index, USD, millions, per 1,000 inhabitants — whichever applies",
+        roles:["designer","tool","social"] },
+      { id:"data-period", text:"The reference time period or year is explicitly labeled",
+        roles:["designer","tool","social"] },
+      { id:"data-source", text:"Data source is cited in full with correct attribution wording",
+        roles:["designer","tool","social"] },
     ]
   },
   {
@@ -418,48 +460,6 @@ const sections = [
         roles:["designer","tool"] },
       { id:"layout-source", text:"Source line and footnotes sit in the footer area and are fully visible",
         roles:["designer","tool"] },
-    ]
-  },
-  {
-    icon:"chartBar", label:"Data accuracy & integrity",
-    items:[
-      { id:"data-verified", text:"All data values have been verified against the source dataset",
-        roles:["designer","tool"] },
-      { id:"data-charttype", text:"The chart type is appropriate for the data and the story being told",
-        roles:["designer","tool"] },
-      { id:"data-baseline", text:"Axes start at the correct baseline",
-        roles:["designer","tool"] },
-      { id:"data-scale", text:"Scale and intervals are consistent and not visually misleading",
-        roles:["designer","tool"] },
-      { id:"data-units", text:"Units are clearly stated on the chart",
-        note:"%, index, USD, millions, per 1,000 inhabitants — whichever applies",
-        roles:["designer","tool","social"] },
-      { id:"data-period", text:"The reference time period or year is explicitly labeled",
-        roles:["designer","tool","social"] },
-      { id:"data-source", text:"Data source is cited in full with correct attribution wording",
-        roles:["designer","tool","social"] },
-    ]
-  },
-  {
-    icon:"tag", label:"Titles, labels & annotations",
-    items:[
-      { id:"lbl-selfexplanatory", text:"The title is self-explanatory without needing surrounding editorial text",
-        roles:["designer","tool","social"] },
-      { id:"lbl-takeaway", text:"The title communicates the key takeaway, not just the topic",
-        note:"“GDP fell in 3 of 5 regions” beats “GDP by region”",
-        roles:["designer","tool","social"] },
-      { id:"lbl-overlap", text:"All data labels are visible and free of overlaps with each other or chart elements",
-        roles:["designer","tool"] },
-      { id:"lbl-annotations", text:"Annotations and callouts are accurate and clearly anchored to the right data point",
-        roles:["designer","tool"] },
-      { id:"lbl-names", text:"Country names, entity names, and acronyms are spelled and capitalized correctly",
-        roles:["designer","tool"] },
-      { id:"lbl-placeholder", text:"No placeholder text remains",
-        note:"No Lorem ipsum, [TBC], TODO, or template defaults",
-        roles:["designer","tool","social"] },
-      { id:"lbl-caption", text:"A plain-language caption is ready for the post",
-        note:"Describe what the chart shows, for readers who cannot see images",
-        roles:["designer","tool","social"] },
     ]
   },
   {
